@@ -54,4 +54,16 @@ public class UploadController : ControllerBase
         var items = await _db.MediaFiles.ToListAsync(ct);
         return Ok(items);
     }
+
+    [HttpGet("signed-url")]
+    public async Task<IActionResult> GetSignedUrl(
+        [FromQuery] string key,
+        [FromQuery] int expiresInSeconds)
+    {
+        var url = await _mediaService.GetSignedUrlAsync(
+            key,
+            TimeSpan.FromSeconds(expiresInSeconds));
+
+        return Ok(new { url });
+    }
 }
