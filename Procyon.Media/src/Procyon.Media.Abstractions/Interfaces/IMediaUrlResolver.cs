@@ -1,0 +1,11 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace Procyon.Media.Abstractions.Interfaces;
+
+public interface IMediaUrlResolver
+{
+    string Resolve(string key);
+}

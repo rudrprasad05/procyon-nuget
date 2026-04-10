@@ -108,6 +108,17 @@ StyleCopReport.xml
 
 # Visual Studio Trace Files
 *.e2e
+*.env.*
+*.env
+!.env.example
+
+# SQLite database files
+*.db
+*.db-shm
+*.db-wal
+
+# EF Core
+Migrations/*.Designer.cs
 
 # ReSharper is a .NET coding add-in
 _ReSharper*/

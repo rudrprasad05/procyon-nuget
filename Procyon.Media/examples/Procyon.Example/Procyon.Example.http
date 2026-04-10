@@ -1,0 +1,6 @@
+@Procyon.Example_HostAddress = http://localhost:5219
+
+GET {{Procyon.Example_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
