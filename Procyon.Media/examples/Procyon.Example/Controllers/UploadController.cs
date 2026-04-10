@@ -66,4 +66,11 @@ public class UploadController : ControllerBase
 
         return Ok(new { url });
     }
+
+    [HttpDelete]
+    public async Task<IActionResult> Delete([FromQuery] string key, CancellationToken ct)
+    {
+        await _mediaService.DeleteAsync(key, ct);
+        return NoContent();
+    }
 }

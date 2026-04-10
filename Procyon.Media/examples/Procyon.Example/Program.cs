@@ -15,6 +15,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddProcyonMedia(builder.Configuration);
 builder.Services.AddS3Provider(builder.Configuration);
 
+
 // Controllers
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
