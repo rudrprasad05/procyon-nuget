@@ -30,7 +30,6 @@ public class UploadController : ControllerBase
             new MediaUploadOptions
             {
                 FileName = file.FileName,
-                Folder = "uploads",
                 ContentType = file.ContentType
             },
             ct);
