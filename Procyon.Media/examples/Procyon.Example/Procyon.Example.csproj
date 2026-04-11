@@ -20,8 +20,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Procyon.Media\Procyon.Media.csproj" />
-    <ProjectReference Include="..\..\src\Procyon.Media.S3\Procyon.Media.S3.csproj" />
+    <PackageReference Include="Procyon.Media" Version="0.1.0" />
+    <PackageReference Include="Procyon.Media.S3" Version="0.1.0" />
   </ItemGroup>
 
 </Project>
