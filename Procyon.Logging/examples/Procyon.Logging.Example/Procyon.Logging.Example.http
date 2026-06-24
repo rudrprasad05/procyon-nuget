@@ -1,0 +1,38 @@
+@ProcyonLoggingExample_HostAddress = http://localhost:5287
+
+GET {{ProcyonLoggingExample_HostAddress}}/api/logging-demo/ping?source=http-file
+Accept: application/json
+X-Procyon-Example: ping
+
+###
+
+POST {{ProcyonLoggingExample_HostAddress}}/api/logging-demo/orders?campaign=spring
+Content-Type: application/json
+X-Procyon-Example: order
+
+{
+  "customerId": "customer-123",
+  "sku": "procyon-logger",
+  "quantity": 2,
+  "expedite": true
+}
+
+###
+
+POST {{ProcyonLoggingExample_HostAddress}}/api/logging-demo/levels
+Accept: application/json
+
+###
+
+POST {{ProcyonLoggingExample_HostAddress}}/api/logging-demo/exception
+Accept: application/json
+
+###
+
+GET {{ProcyonLoggingExample_HostAddress}}/api/logging-demo/quiet
+Accept: application/json
+
+###
+
+GET {{ProcyonLoggingExample_HostAddress}}/procyon/logs
+Accept: text/html

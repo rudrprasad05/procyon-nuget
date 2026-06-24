@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <PackageId>Procyon.Logging.Abstractions</PackageId>
+    <Version>0.1.0</Version>
+    <Description>Abstractions for Procyon lightweight JSON file logging</Description>
+    <PackageTags>logging;json;files;dotnet;procyon</PackageTags>
+    <RepositoryUrl>https://github.com/rudrprasad05/nuget</RepositoryUrl>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+  </PropertyGroup>
+</Project>
