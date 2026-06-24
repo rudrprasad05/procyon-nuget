@@ -32,6 +32,7 @@ public static class ProcyonLogsEndpointExtensions
         var basePath = NormalizePath(configuredOptions.Web.Path);
         var entriesPath = $"{basePath}/entries";
         var hubPath = $"{basePath}/hub";
+        var faviconPath = NormalizePath(configuredOptions.Web.FaviconPath);
 
         endpoints.MapGet(basePath, async context =>
         {
@@ -43,7 +44,7 @@ public static class ProcyonLogsEndpointExtensions
 
             var options = context.RequestServices.GetRequiredService<IOptionsMonitor<ProcyonLoggingOptions>>().CurrentValue;
             context.Response.ContentType = "text/html; charset=utf-8";
-            await context.Response.WriteAsync(RenderPage(options.Web, entriesPath, hubPath), context.RequestAborted);
+            await context.Response.WriteAsync(RenderPage(options.Web, entriesPath, hubPath, faviconPath), context.RequestAborted);
         });
 
         endpoints.MapGet(entriesPath, async context =>
@@ -57,6 +58,18 @@ public static class ProcyonLogsEndpointExtensions
             var store = context.RequestServices.GetRequiredService<ProcyonLogStore>();
             context.Response.ContentType = "application/json; charset=utf-8";
             await JsonSerializer.SerializeAsync(context.Response.Body, store.GetRecent(), JsonOptions, context.RequestAborted);
+        });
+
+        endpoints.MapGet(faviconPath, async context =>
+        {
+            if (!IsAllowed(context))
+            {
+                context.Response.StatusCode = StatusCodes.Status404NotFound;
+                return;
+            }
+
+            context.Response.ContentType = "image/svg+xml; charset=utf-8";
+            await context.Response.WriteAsync(DefaultFaviconSvg, context.RequestAborted);
         });
 
         if (configuredOptions.Web.UseSignalR)
@@ -84,7 +97,7 @@ public static class ProcyonLogsEndpointExtensions
         return path.StartsWith('/') ? path : "/" + path;
     }
 
-    private static string RenderPage(ProcyonLoggingWebOptions options, string entriesPath, string hubPath)
+    private static string RenderPage(ProcyonLoggingWebOptions options, string entriesPath, string hubPath, string faviconPath)
         => $$"""
 <!doctype html>
 <html lang="en">
@@ -92,6 +105,7 @@ public static class ProcyonLogsEndpointExtensions
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Procyon Logs</title>
+  <link rel="icon" type="image/svg+xml" href="{{faviconPath}}">
   <style>
     :root { color-scheme: light dark; font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
     body { margin: 0; background: #111827; color: #f9fafb; }
@@ -189,5 +203,14 @@ public static class ProcyonLogsEndpointExtensions
   </script>
 </body>
 </html>
+""";
+
+    private const string DefaultFaviconSvg = """
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" rx="14" fill="#111827"/>
+  <path d="M17 18h30v28H17z" fill="#f9fafb"/>
+  <path d="M22 24h20M22 31h16M22 38h20" stroke="#111827" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="48" cy="18" r="7" fill="#38bdf8"/>
+</svg>
 """;
 }

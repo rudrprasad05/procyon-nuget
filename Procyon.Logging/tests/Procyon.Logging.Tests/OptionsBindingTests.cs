@@ -22,8 +22,10 @@ public class OptionsBindingTests
             ["Procyon:Logging:Web:Enabled"] = "false",
             ["Procyon:Logging:Web:DevOnly"] = "false",
             ["Procyon:Logging:Web:Path"] = "/logs",
+            ["Procyon:Logging:Web:LogRequests"] = "true",
             ["Procyon:Logging:Web:UseSignalR"] = "false",
             ["Procyon:Logging:Web:FallbackPollingSeconds"] = "8",
+            ["Procyon:Logging:Web:FaviconPath"] = "/favicon.svg",
             ["Procyon:Logging:ApiLogging:LogRequestBody"] = "true",
             ["Procyon:Logging:ApiLogging:LogResponseBody"] = "true",
             ["Procyon:Logging:ApiLogging:LogHeaders"] = "true",
@@ -49,8 +51,10 @@ public class OptionsBindingTests
         Assert.False(options.Web.Enabled);
         Assert.False(options.Web.DevOnly);
         Assert.Equal("/logs", options.Web.Path);
+        Assert.True(options.Web.LogRequests);
         Assert.False(options.Web.UseSignalR);
         Assert.Equal(8, options.Web.FallbackPollingSeconds);
+        Assert.Equal("/favicon.svg", options.Web.FaviconPath);
         Assert.True(options.ApiLogging.LogRequestBody);
         Assert.True(options.ApiLogging.LogResponseBody);
         Assert.True(options.ApiLogging.LogHeaders);

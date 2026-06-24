@@ -8,6 +8,7 @@ builder.Services.AddEndpointsApiExplorer();
 
 var app = builder.Build();
 
+app.UseStaticFiles();
 app.UseProcyonLogging();
 
 app.MapGet("/", () => Results.Redirect("/procyon/logs"));

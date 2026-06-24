@@ -27,6 +27,7 @@ public sealed class ProcyonLoggingMiddleware
         if (!options.Enabled ||
             !options.ApiLogging.Enabled ||
             !ProcyonLogger.ShouldLog(options, ProcyonLogLevel.Information) ||
+            ShouldSkipWebLogRequest(context, options) ||
             NoLogMetadata.HasNoLog(context.GetEndpoint()))
         {
             await _next(context);
@@ -122,4 +123,24 @@ public sealed class ProcyonLoggingMiddleware
             pair => pair.Key,
             pair => pair.Value.Where(value => value is not null).Select(value => value!).ToArray(),
             StringComparer.OrdinalIgnoreCase);
+
+    private static bool ShouldSkipWebLogRequest(HttpContext context, ProcyonLoggingOptions options)
+    {
+        if (options.Web.LogRequests)
+            return false;
+
+        var webPath = NormalizePath(options.Web.Path);
+        var faviconPath = NormalizePath(options.Web.FaviconPath);
+
+        return context.Request.Path.StartsWithSegments(webPath, StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(context.Request.Path.Value, faviconPath.Value, StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static PathString NormalizePath(string path)
+    {
+        if (string.IsNullOrWhiteSpace(path))
+            return new PathString("/procyon/logs");
+
+        return new PathString(path.StartsWith('/') ? path : "/" + path);
+    }
 }
