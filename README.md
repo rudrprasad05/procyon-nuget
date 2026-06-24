@@ -1,165 +1,56 @@
 # Procyon NuGet Packages
 
-A modular collection of reusable .NET libraries designed for building scalable, production-ready systems.
+Reusable .NET 8 libraries for common application infrastructure. The repository is split into focused package families so each concern can be adopted independently.
 
-## 📌 Overview
+## Overview
 
-This repository contains all official **Procyon NuGet packages**, built with a focus on:
+Procyon packages are designed around small abstractions, dependency injection, and provider-based implementations. The main package families currently cover:
 
-- **Modularity** — each concern is isolated into its own package
-- **Extensibility** — plug-and-play providers (S3, future storage backends, etc.)
-- **Framework alignment** — built on top of standard .NET abstractions
-- **Minimal assumptions** — works across any ASP.NET Core or .NET project
+- `Procyon.Logging`: lightweight JSON file logging for ASP.NET Core.
+- `Procyon.Media`: media upload, retrieval, deletion, URL resolution, hashing, and storage providers.
 
----
+See each package README for setup and detailed configuration:
 
-## 📦 Packages
+- [Procyon.Logging](Procyon.Logging/README.md)
+- [Procyon.Media](Procyon.Media/README.md)
 
-### Core Media Stack
+## Packages
 
-| Package                      | Description                    |
-| ---------------------------- | ------------------------------ |
-| `Procyon.Media.Abstractions` | Core interfaces and contracts  |
-| `Procyon.Media`              | Core media service logic       |
-| `Procyon.Media.S3`           | AWS S3 provider implementation |
+| Package | Purpose |
+| --- | --- |
+| `Procyon.Logging.Abstractions` | Logging contracts, log entry models, levels, and `[NoLog]`. |
+| `Procyon.Logging` | Request logging middleware, file writer, retention, queueing, and browser log page. |
+| `Procyon.Media.Abstractions` | Media service, provider, path, URL, and upload result contracts. |
+| `Procyon.Media` | Core media service, hashing, path generation, URL resolution, and DI setup. |
+| `Procyon.Media.S3` | AWS S3 storage provider for `Procyon.Media`. |
+| `Procyon.Media.Azure` | Azure Blob Storage provider for `Procyon.Media`. |
 
----
-
-## 🏗️ Architecture
+## Architecture
 
 ```text
+Procyon.Logging.Abstractions
+        ^
+Procyon.Logging
+
 Procyon.Media.Abstractions
-        ↑
-Procyon.Media (Core)
-        ↑
-Procyon.Media.S3 (Provider)
+        ^
+Procyon.Media
+        ^
+Storage providers:
+  - Procyon.Media.S3
+  - Procyon.Media.Azure
 ```
 
-### Design Principles
-
-- **Abstractions-first**
-- **Provider-based architecture**
-- **Dependency injection friendly**
-- **Config-driven but not config-dependent**
-
----
-
-## 🚀 Getting Started
-
-Each package can be used independently.
-
-Example:
-
-```bash
-dotnet add package Procyon.Media
-dotnet add package Procyon.Media.S3
-```
-
-Then in your app:
-
-```csharp
-builder.Services.AddProcyonMedia(options =>
-{
-    options.EnableHashing = true;
-});
-```
-
----
-
-## ⚙️ Configuration
-
-Supports both:
-
-### `appsettings.json`
-
-```json
-{
-  "Procyon": {
-    "Media": {
-      "EnableHashing": true
-    }
-  }
-}
-```
-
-### Environment Variables
-
-```env
-Procyon__Media__EnableHashing=true
-```
-
----
-
-## 🧪 Example Project
-
-See:
+## Repository Structure
 
 ```text
-examples/Procyon.Example
+Procyon.Logging/
+  src/
+  examples/
+  tests/
+
+Procyon.Media/
+  src/
+  examples/
+  tests/
 ```
-
-This demonstrates:
-
-- File upload
-- S3 integration
-- API usage
-- Config setup
-
----
-
-## 🧱 Repository Structure
-
-```text
-src/
-  Procyon.Media.Abstractions/
-  Procyon.Media/
-  Procyon.Media.S3/
-
-examples/
-  Procyon.Example/
-
-tests/
-  Procyon.Media.Tests/
-```
-
----
-
-## 🧠 Philosophy
-
-Procyon libraries aim to:
-
-- reduce repeated infrastructure code
-- standardize patterns across projects
-- remain lightweight and composable
-
----
-
-## 🚧 Roadmap
-
-- Signed URL uploads
-- Background processing hooks
-- Image transformations
-- Additional providers (Azure Blob, local disk)
-- Optional EF persistence layer
-
----
-
-## 🤝 Contributing
-
-Contributions are welcome. Keep changes:
-
-- modular
-- well-scoped
-- provider-friendly
-
----
-
-## 📄 License
-
-MIT (or your chosen license)
-
----
-
-## 🔗 Repository
-
-https://github.com/rudrprasad05/nuget
