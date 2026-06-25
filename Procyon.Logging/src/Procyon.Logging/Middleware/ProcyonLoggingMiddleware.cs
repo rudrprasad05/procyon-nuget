@@ -133,7 +133,8 @@ public sealed class ProcyonLoggingMiddleware
         var faviconPath = NormalizePath(options.Web.FaviconPath);
 
         return context.Request.Path.StartsWithSegments(webPath, StringComparison.OrdinalIgnoreCase) ||
-            string.Equals(context.Request.Path.Value, faviconPath.Value, StringComparison.OrdinalIgnoreCase);
+            string.Equals(context.Request.Path.Value, faviconPath.Value, StringComparison.OrdinalIgnoreCase) ||
+            string.Equals(context.Request.Path.Value, "/favicon.ico", StringComparison.OrdinalIgnoreCase);
     }
 
     private static PathString NormalizePath(string path)

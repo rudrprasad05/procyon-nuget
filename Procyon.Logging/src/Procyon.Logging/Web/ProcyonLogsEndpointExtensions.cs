@@ -151,6 +151,14 @@ public static class ProcyonLogsEndpointExtensions
     const rows = document.getElementById("logs");
     const status = document.getElementById("status");
     const seen = new Set();
+    const levelNames = {
+      0: "Trace",
+      1: "Debug",
+      2: "Information",
+      3: "Warning",
+      4: "Error",
+      5: "Critical"
+    };
 
     function key(entry) {
       return [entry.timestamp, entry.traceId, entry.message, entry.durationMs].join("|");
@@ -161,14 +169,22 @@ public static class ProcyonLogsEndpointExtensions
       if (seen.has(id)) return;
       seen.add(id);
 
+      const level = formatLevel(entry.level);
       const tr = document.createElement("tr");
       tr.innerHTML = `
         <td>${escapeHtml(entry.timestamp ?? "")}</td>
-        <td class="level-${escapeHtml(entry.level ?? "")}">${escapeHtml(entry.level ?? "")}</td>
+        <td class="level-${escapeHtml(level)}">${escapeHtml(level)}</td>
         <td>${escapeHtml(entry.message ?? "")}</td>
         <td><code>${escapeHtml([entry.method, entry.path, entry.statusCode, entry.durationMs ? entry.durationMs.toFixed(2) + "ms" : ""].filter(Boolean).join(" "))}</code></td>
         <td><code>${escapeHtml(JSON.stringify(entry.data ?? entry.exception ?? {}, null, 2))}</code></td>`;
       rows.prepend(tr);
+    }
+
+    function formatLevel(value) {
+      if (value === null || value === undefined) return "";
+      if (typeof value === "number") return levelNames[value] ?? String(value);
+      if (/^\d+$/.test(value)) return levelNames[Number(value)] ?? value;
+      return value;
     }
 
     function escapeHtml(value) {

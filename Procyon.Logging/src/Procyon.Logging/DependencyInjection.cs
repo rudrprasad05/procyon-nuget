@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System.Text.Json.Serialization;
 using Procyon.Logging.Abstractions;
 using Procyon.Logging.Middleware;
 using Procyon.Logging.Options;
@@ -32,7 +33,11 @@ public static class DependencyInjection
 
         if (configuredOptions.Web.Enabled && configuredOptions.Web.UseSignalR)
         {
-            services.AddSignalR();
+            services.AddSignalR()
+                .AddJsonProtocol(options =>
+                {
+                    options.PayloadSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                });
             services.AddSingleton<IProcyonLogBroadcaster, SignalRProcyonLogBroadcaster>();
         }
         else
