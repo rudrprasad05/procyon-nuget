@@ -8,7 +8,7 @@ Procyon.Email is the provider-independent email package family for Procyon. Appl
 | --- | --- |
 | `Procyon.Email.Abstractions` | Provider-neutral contracts, models, result types, enums, and exceptions. |
 | `Procyon.Email` | Provider-independent orchestration, configuration, validation, DI, provider resolution, and retry coordination. |
-| `Procyon.Email.Resend` | Resend provider scaffolding for Procyon.Email. Full HTTP delivery is intentionally not implemented yet. |
+| `Procyon.Email.Resend` | Resend provider integration for Procyon.Email using the Resend HTTP API. |
 
 ## Dependency graph
 
@@ -102,7 +102,7 @@ The variable name may be configured, but the secret value must not be stored in 
 
 ## Current status
 
-This task establishes architecture and scaffolding only. The Resend provider validates configuration, registers through DI, exposes provider capabilities, and contains internal request/response mapping placeholders. It does not send email over the Resend HTTP API yet and is not production-ready for delivery.
+The Resend provider validates configuration, registers through DI, maps provider-neutral messages to Resend requests, sends email through the Resend HTTP API, and maps success and error responses back to provider-neutral results. API keys are read only from environment variables.
 
 ## Roadmap
 

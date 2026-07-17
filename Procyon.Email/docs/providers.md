@@ -12,7 +12,7 @@ The core package does not reference provider packages. Provider discovery is not
 
 ## Resend
 
-`Procyon.Email.Resend` currently provides provider registration, non-secret options, environment-variable validation, provider capabilities, and internal request/response mapping scaffolding. Full Resend HTTP delivery is intentionally deferred.
+`Procyon.Email.Resend` provides provider registration, non-secret options, environment-variable validation, provider capabilities, request mapping, HTTP delivery through the Resend `/emails` endpoint, and response mapping.
 
 ## Planned providers
 
@@ -24,7 +24,7 @@ SMTP support is planned as a provider package focused on broad compatibility and
 
 ## Capability differences
 
-Providers vary in support for attachments, inline attachments, tags, scheduled sending, idempotency, batch sending, and webhooks. Each provider declares `EmailProviderCapabilities`, and the core layer validates messages against those capabilities before sending.
+Providers vary in support for attachments, inline attachments, tags, scheduled sending, idempotency, batch sending, and webhooks. Each provider declares `EmailProviderCapabilities`, and the core layer validates messages against those capabilities before sending. Resend currently supports HTML and text bodies, attachments, CC, BCC, reply-to, custom headers, tags, and idempotency through this package.
 
 ## Unsupported features
 

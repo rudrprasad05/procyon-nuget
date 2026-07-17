@@ -6,7 +6,7 @@ Create package structure, provider-neutral contracts, core orchestration, config
 
 ## Phase 2: Resend sending implementation
 
-Implement the Resend HTTP boundary using `IHttpClientFactory`, translate provider responses, add retry-aware failure handling, and expand tests without calling the real API.
+Implemented. The Resend provider uses `IHttpClientFactory`, translates provider responses, handles transport failures as provider-neutral failed results, and has tests that verify request and response mapping without calling the real API.
 
 ## Phase 3: templates and development providers
 

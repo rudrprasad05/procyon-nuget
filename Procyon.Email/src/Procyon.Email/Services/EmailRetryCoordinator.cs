@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Options;
+using Procyon.Email.Abstractions;
 using Procyon.Email.Configuration;
 using Procyon.Email.Providers;
 
@@ -22,7 +23,7 @@ internal sealed class EmailRetryCoordinator(IOptionsMonitor<EmailOptions> option
         for (var attempt = 1; attempt <= maximumAttempts; attempt++)
         {
             var result = await provider.SendAsync(message, cancellationToken).ConfigureAwait(false);
-            if (result.Succeeded || attempt == maximumAttempts)
+            if (result.Succeeded || result.Status != EmailSendStatus.Failed || attempt == maximumAttempts)
             {
                 return (result, attempt);
             }

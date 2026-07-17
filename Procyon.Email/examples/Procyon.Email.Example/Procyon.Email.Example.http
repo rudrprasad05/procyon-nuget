@@ -1,0 +1,4 @@
+@Procyon_Email_Example_HostAddress = http://localhost:5294
+
+GET {{Procyon_Email_Example_HostAddress}}/
+

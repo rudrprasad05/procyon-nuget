@@ -52,7 +52,7 @@ Configuration is rooted at `Procyon:Email`.
 | `Delivery:TimeoutSeconds` | `30` | Provider send timeout value reserved for provider implementations. |
 | `Delivery:MaximumRecipientsPerMessage` | `50` | Maximum total `To`, `Cc`, and `Bcc` recipients. |
 | `Delivery:MaximumAttachmentSizeMb` | `20` | Maximum size for each attachment. |
-| `Retry:Enabled` | `true` | Enables retry coordination. |
+| `Retry:Enabled` | `true` | Enables retry coordination for transient provider failures. Provider rejections are not retried. |
 | `Retry:MaximumAttempts` | `3` | Maximum provider send attempts. |
 | `Retry:InitialDelaySeconds` | `2` | Initial retry delay. |
 | `Retry:UseExponentialBackoff` | `true` | Uses exponential delay growth. |

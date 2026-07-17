@@ -1,8 +1,10 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using Procyon.Email.Configuration;
 using Procyon.Email.DependencyInjection;
 using Procyon.Email.Providers;
 using Procyon.Email.Resend.Configuration;
+using Procyon.Email.Resend.Internal;
 using Procyon.Email.Resend.Mapping;
 using Procyon.Email.Resend.Providers;
 using Procyon.Email.Resend.Validation;
@@ -26,12 +28,15 @@ public static class ResendEmailBuilderExtensions
             .ValidateOnStart();
 
         builder.Services.AddSingleton<IValidateOptions<ResendEmailOptions>, ResendOptionsValidator>();
+        builder.Services.AddSingleton<ResendApiKeyProvider>();
         builder.Services.AddSingleton<ResendRequestMapper>();
         builder.Services.AddSingleton<ResendResponseMapper>();
         builder.Services.AddHttpClient<ResendEmailProvider>((serviceProvider, httpClient) =>
         {
             var options = serviceProvider.GetRequiredService<IOptions<ResendEmailOptions>>().Value;
+            var emailOptions = serviceProvider.GetRequiredService<IOptions<EmailOptions>>().Value;
             httpClient.BaseAddress = new Uri(options.ApiBaseUrl, UriKind.Absolute);
+            httpClient.Timeout = TimeSpan.FromSeconds(emailOptions.Delivery.TimeoutSeconds);
         });
         builder.Services.AddTransient<IEmailProvider>(serviceProvider =>
             serviceProvider.GetRequiredService<ResendEmailProvider>());

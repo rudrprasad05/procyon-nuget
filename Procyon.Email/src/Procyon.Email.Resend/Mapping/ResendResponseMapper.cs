@@ -8,15 +8,18 @@ internal sealed class ResendResponseMapper
 {
     public EmailProviderResult MapAccepted(ResendEmailResponse response)
     {
-        return EmailProviderResult.Accepted(response.MessageId);
+        return EmailProviderResult.Accepted(response.Id);
     }
 
-    public EmailProviderResult MapFailure(string errorCode, string errorMessage)
+    public EmailProviderResult MapFailure(
+        EmailSendStatus status,
+        string errorCode,
+        string errorMessage)
     {
         return new EmailProviderResult
         {
             Succeeded = false,
-            Status = EmailSendStatus.Failed,
+            Status = status,
             ErrorCode = errorCode,
             ErrorMessage = errorMessage
         };
