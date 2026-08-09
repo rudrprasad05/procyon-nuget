@@ -13,6 +13,8 @@ namespace Procyon.Logging;
 
 public static class DependencyInjection
 {
+    private const string ProcyonLoggingUiMappedKey = "Procyon.Logging.UiMapped";
+
     public static IServiceCollection AddProcyonLogging(
         this IServiceCollection services,
         IConfiguration config)
@@ -52,8 +54,20 @@ public static class DependencyInjection
     {
         app.UseMiddleware<ProcyonLoggingMiddleware>();
 
+        return app.UseProcyonLoggingUi();
+    }
+
+    public static IApplicationBuilder UseProcyonLoggingUi(this IApplicationBuilder app)
+    {
+        if (app.Properties.TryGetValue(ProcyonLoggingUiMappedKey, out var mapped) &&
+            mapped is true)
+            return app;
+
         if (app is IEndpointRouteBuilder endpoints)
+        {
             endpoints.MapProcyonLogs();
+            app.Properties[ProcyonLoggingUiMappedKey] = true;
+        }
 
         return app;
     }

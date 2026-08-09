@@ -29,10 +29,10 @@ public static class ProcyonLogsEndpointExtensions
             .GetRequiredService<IOptions<ProcyonLoggingOptions>>()
             .Value;
 
-        var basePath = NormalizePath(configuredOptions.Web.Path);
+        var basePath = NormalizePath(configuredOptions.Web.Path, ProcyonLoggingDefaults.WebPath);
         var entriesPath = $"{basePath}/entries";
         var hubPath = $"{basePath}/hub";
-        var faviconPath = NormalizePath(configuredOptions.Web.FaviconPath);
+        var faviconPath = NormalizePath(configuredOptions.Web.FaviconPath, ProcyonLoggingDefaults.WebFaviconPath);
 
         endpoints.MapGet(basePath, async context =>
         {
@@ -89,12 +89,9 @@ public static class ProcyonLogsEndpointExtensions
         return !options.Web.DevOnly || environment.IsDevelopment();
     }
 
-    private static string NormalizePath(string path)
+    private static string NormalizePath(string path, string fallback)
     {
-        if (string.IsNullOrWhiteSpace(path))
-            return "/procyon/logs";
-
-        return path.StartsWith('/') ? path : "/" + path;
+        return ProcyonLoggingDefaults.NormalizePath(path, fallback);
     }
 
     private static string RenderPage(ProcyonLoggingWebOptions options, string entriesPath, string hubPath, string faviconPath)

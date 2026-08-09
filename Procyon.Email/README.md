@@ -26,7 +26,7 @@ dotnet add package Procyon.Email.Resend
 
 That provider package transitively brings in `Procyon.Email` and `Procyon.Email.Abstractions`.
 
-## Future usage shape
+## Usage
 
 ```csharp
 using Procyon.Email.Abstractions;

@@ -26,9 +26,10 @@ var app = builder.Build();
 
 app.UseStaticFiles();
 app.UseProcyonLogging();
+app.UseProcyonLoggingUi();
 ```
 
-`UseProcyonLogging()` adds automatic API request logging. When endpoint routing is available, it also maps the optional browser page, log entries endpoint, favicon endpoint, and SignalR hub.
+`UseProcyonLogging()` adds automatic API request logging. `UseProcyonLoggingUi()` maps the optional browser page, log entries endpoint, favicon endpoint, and SignalR hub using the configured `Web:Path`. Calling both is safe; UI endpoints are mapped once.
 
 ## Configuration
 
@@ -52,11 +53,11 @@ Configuration is read from `Procyon:Logging`.
       "Web": {
         "Enabled": true,
         "DevOnly": true,
-        "Path": "/procyon/logs",
+        "Path": "/procyon/logging",
         "LogRequests": false,
         "UseSignalR": true,
         "FallbackPollingSeconds": 3,
-        "FaviconPath": "/procyon/logs/favicon.svg"
+        "FaviconPath": "/procyon/logging/favicon.svg"
       },
       "ApiLogging": {
         "Enabled": true,
@@ -89,7 +90,7 @@ Set `File:Mode` to `Single` to write to one file using `File:SingleFileName`.
 
 ## Browser Log Page
 
-The browser page is available at `/procyon/logs` by default. It is enabled by config and development-only by default, similar to a Swagger UI setup.
+The browser page is available at `/procyon/logging` by default. It is enabled by config and development-only by default, similar to a Swagger UI setup.
 
 When `Web:UseSignalR` is true, live entries are pushed through SignalR. The page also polls the entries endpoint as a fallback using `Web:FallbackPollingSeconds`.
 
@@ -148,7 +149,7 @@ dotnet run --project Procyon.Logging/examples/Procyon.Logging.Example/Procyon.Lo
 Then open:
 
 ```text
-http://localhost:5287/procyon/logs
+http://localhost:5287/procyon/logging
 ```
 
 Useful sample endpoints:

@@ -8,10 +8,12 @@ namespace Procyon.Logging.Example.Controllers;
 public sealed class LoggingDemoController : ControllerBase
 {
     private readonly IProcyonLogger _logger;
+    private readonly IConfiguration _configuration;
 
-    public LoggingDemoController(IProcyonLogger logger)
+    public LoggingDemoController(IProcyonLogger logger, IConfiguration configuration)
     {
         _logger = logger;
+        _configuration = configuration;
     }
 
     [HttpGet("ping")]
@@ -28,7 +30,7 @@ public sealed class LoggingDemoController : ControllerBase
             message = "pong",
             source,
             traceId = HttpContext.TraceIdentifier,
-            logUi = "/procyon/logs"
+            logUi = GetLogUiPath()
         });
     }
 
@@ -120,6 +122,12 @@ public sealed class LoggingDemoController : ControllerBase
 
     private static void ThrowDemoException()
         => throw new InvalidOperationException("This is a Procyon.Logging example exception.");
+
+    private string GetLogUiPath()
+    {
+        var path = _configuration["Procyon:Logging:Web:Path"] ?? "/procyon/logging";
+        return path.StartsWith('/') ? path : "/" + path;
+    }
 }
 
 public sealed record CreateOrderRequest(

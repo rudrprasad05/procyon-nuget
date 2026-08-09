@@ -10,8 +10,10 @@ var app = builder.Build();
 
 app.UseStaticFiles();
 app.UseProcyonLogging();
+app.UseProcyonLoggingUi();
 
-app.MapGet("/", () => Results.Redirect("/procyon/logs"));
+var logUiPath = builder.Configuration["Procyon:Logging:Web:Path"] ?? "/procyon/logging";
+app.MapGet("/", () => Results.Redirect(logUiPath.StartsWith('/') ? logUiPath : "/" + logUiPath));
 app.MapControllers();
 
 app.Run();

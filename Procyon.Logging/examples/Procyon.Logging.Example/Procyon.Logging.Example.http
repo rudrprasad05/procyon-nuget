@@ -34,5 +34,5 @@ Accept: application/json
 
 ###
 
-GET {{ProcyonLoggingExample_HostAddress}}/procyon/logs
+GET {{ProcyonLoggingExample_HostAddress}}/procyon/logging
 Accept: text/html

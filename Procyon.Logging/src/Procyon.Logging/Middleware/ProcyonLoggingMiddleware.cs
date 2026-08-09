@@ -129,19 +129,12 @@ public sealed class ProcyonLoggingMiddleware
         if (options.Web.LogRequests)
             return false;
 
-        var webPath = NormalizePath(options.Web.Path);
-        var faviconPath = NormalizePath(options.Web.FaviconPath);
+        var webPath = ProcyonLoggingDefaults.NormalizePathString(options.Web.Path, ProcyonLoggingDefaults.WebPath);
+        var faviconPath = ProcyonLoggingDefaults.NormalizePathString(options.Web.FaviconPath, ProcyonLoggingDefaults.WebFaviconPath);
 
         return context.Request.Path.StartsWithSegments(webPath, StringComparison.OrdinalIgnoreCase) ||
             string.Equals(context.Request.Path.Value, faviconPath.Value, StringComparison.OrdinalIgnoreCase) ||
             string.Equals(context.Request.Path.Value, "/favicon.ico", StringComparison.OrdinalIgnoreCase);
     }
 
-    private static PathString NormalizePath(string path)
-    {
-        if (string.IsNullOrWhiteSpace(path))
-            return new PathString("/procyon/logs");
-
-        return new PathString(path.StartsWith('/') ? path : "/" + path);
-    }
 }
