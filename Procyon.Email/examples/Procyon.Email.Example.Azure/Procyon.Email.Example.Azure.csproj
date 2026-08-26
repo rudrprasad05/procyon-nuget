@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="DotNetEnv" Version="3.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Procyon.Email.Abstractions\Procyon.Email.Abstractions.csproj" />
+    <ProjectReference Include="..\..\src\Procyon.Email\Procyon.Email.csproj" />
+    <ProjectReference Include="..\..\src\Procyon.Email.Azure\Procyon.Email.Azure.csproj" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,3 @@
+@Procyon_Email_Example_Azure_HostAddress = http://localhost:5295
+
+GET {{Procyon_Email_Example_Azure_HostAddress}}/

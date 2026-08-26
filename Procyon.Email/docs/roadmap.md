@@ -22,7 +22,7 @@ Add an Amazon SES provider package.
 
 ## Phase 6: Azure
 
-Add an Azure Communication Services Email provider package.
+Implemented. The Azure provider maps Procyon messages to Azure Communication Services email requests, signs HTTP requests with the configured connection string access key, maps accepted sends and provider errors, and has tests for request and response behavior without calling the real service.
 
 ## Phase 7: queue and durable outbox
 
