@@ -17,7 +17,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <PackageId>Procyon.Email.Azure</PackageId>
     <Title>Procyon.Email.Azure</Title>
-    <Version>0.1.0</Version>
+    <Version>0.2.0</Version>
     <Description>Azure Communication Services email provider integration for Procyon.Email.</Description>
     <PackageTags>email;mail;azure;communication-services;provider;dotnet;procyon</PackageTags>
     <PackageReadmeFile>README.md</PackageReadmeFile>

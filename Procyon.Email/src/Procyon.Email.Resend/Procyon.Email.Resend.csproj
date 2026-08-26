@@ -16,7 +16,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <PackageId>Procyon.Email.Resend</PackageId>
     <Title>Procyon.Email.Resend</Title>
-    <Version>0.1.0</Version>
+    <Version>0.2.0</Version>
     <Description>Resend provider integration for Procyon.Email.</Description>
     <PackageTags>email;mail;resend;provider;dotnet;procyon</PackageTags>
     <PackageReadmeFile>README.md</PackageReadmeFile>

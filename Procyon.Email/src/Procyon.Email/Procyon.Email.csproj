@@ -17,7 +17,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <PackageId>Procyon.Email</PackageId>
     <Title>Procyon.Email</Title>
-    <Version>0.1.0</Version>
+    <Version>0.2.0</Version>
     <Description>Provider-independent email orchestration, configuration, validation, and dependency injection for Procyon.</Description>
     <PackageTags>email;mail;configuration;dependency-injection;dotnet;procyon</PackageTags>
     <PackageReadmeFile>README.md</PackageReadmeFile>
