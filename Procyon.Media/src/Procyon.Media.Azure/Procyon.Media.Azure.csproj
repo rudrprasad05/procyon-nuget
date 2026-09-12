@@ -1,22 +1,37 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <ProjectReference Include="..\Procyon.Media.Abstractions\Procyon.Media.Abstractions.csproj" />
+    <ProjectReference Include="..\Procyon.Media\Procyon.Media.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Azure.Storage.Blobs" Version="12.27.0" />
-    <PackageReference Include="AWSSDK.Extensions.NETCore.Setup" Version="4.0.3.32" />
-    <PackageReference Include="AWSSDK.S3" Version="4.0.21" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.1" />
-    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="8.0.0" />
   </ItemGroup>
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <PackageId>Procyon.Media.Azure</PackageId>
+    <Version>1.0.1</Version>
+    <Authors>Rudr Prasad</Authors>
+    <Company>Procyon</Company>
+    <Description>Azure Blob Storage provider for Procyon.Media.</Description>
+    <PackageTags>media;upload;azure;blob;storage;dotnet</PackageTags>
+    <RepositoryUrl>https://github.com/rudrprasad05/nuget</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);1591</NoWarn>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\README.md" Pack="true" PackagePath="\" Link="README.md" />
+  </ItemGroup>
 
 </Project>

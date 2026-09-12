@@ -12,8 +12,16 @@ public static class AzureServiceCollectionExtensions
         this IServiceCollection services,
         IConfiguration config)
     {
-        var connectionString = config.GetConnectionString("AzureBlob");
+        var connectionString = config.GetConnectionString("AzureBlob")
+            ?? throw new InvalidOperationException(
+                "Connection string 'AzureBlob' is required.");
         var containerName = config["Media:Container"];
+
+        if (string.IsNullOrWhiteSpace(containerName))
+        {
+            throw new InvalidOperationException(
+                "Configuration value 'Media:Container' is required.");
+        }
 
         services.AddSingleton(_ =>
         {

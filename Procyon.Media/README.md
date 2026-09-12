@@ -1,58 +1,80 @@
 # Procyon.Media
 
-A modular media upload library for .NET 8 with provider-based storage.
-
-## Overview
-
-`Procyon.Media` provides a small media service abstraction for upload, retrieval, deletion, signed URLs, URL resolution, path generation, and optional SHA256 hashing. Storage is supplied by provider packages, so the core media package does not depend on a specific cloud provider.
+`Procyon.Media` is a small, provider-based media library for .NET 8. The core
+package handles storage keys, uploads, retrieval, deletion, URL resolution, and
+optional SHA256 hashing. `Procyon.Media.Azure` supplies Azure Blob Storage.
 
 ## Packages
 
-| Package | Description |
+| Package | Purpose |
 | --- | --- |
-| `Procyon.Media.Abstractions` | `IMediaService`, `IMediaProvider`, path generation, URL resolution, upload options, and result models. |
-| `Procyon.Media` | Core service implementation, hashing, default path generation, URL resolver, and DI registration. |
-| `Procyon.Media.S3` | AWS S3 provider implementation. |
-| `Procyon.Media.Azure` | Azure Blob Storage provider implementation. |
+| `Procyon.Media.Abstractions` | Public service, provider, path, URL, options, and result contracts. |
+| `Procyon.Media` | Core implementation and dependency-injection registration. |
+| `Procyon.Media.Azure` | Azure Blob Storage provider and registration. |
+| `Procyon.Media.S3` | Optional AWS S3 provider; not part of the Azure release. |
 
-Current package versions are `0.1.0` where package metadata is present.
+## Azure quick start
 
-## Features
-
-- Upload media through `IMediaService`
-- Delete media by key
-- Retrieve media streams by key
-- Generate signed URLs through the selected provider
-- Resolve public URLs from configured `BaseUrl`
-- Generate unique file names by default
-- Store files under an optional default folder
-- Compute SHA256 hashes when enabled
-- Swap storage providers through `IMediaProvider`
-
-## Installation
-
-Install the core package and one provider package.
+### Install
 
 ```bash
 dotnet add package Procyon.Media
-dotnet add package Procyon.Media.S3
+dotnet add package Procyon.Media.Azure
 ```
 
-For Azure Blob Storage, use the Azure provider project/package instead of the S3 provider.
+The abstraction package is restored transitively; applications do not need to
+install it separately.
 
-## Quick Start
+### Configure
 
-Register the core media services and a storage provider.
+Core settings live under `Procyon:Media`. The Azure provider reads its
+connection string from `ConnectionStrings:AzureBlob` and its container from
+`Media:Container`.
 
-```csharp
-using Procyon.Media;
-using Procyon.Media.S3;
-
-builder.Services.AddProcyonMedia(builder.Configuration);
-builder.Services.AddS3Provider(builder.Configuration);
+```json
+{
+  "ConnectionStrings": {
+    "AzureBlob": "UseDevelopmentStorage=true"
+  },
+  "Media": {
+    "Container": "media"
+  },
+  "Procyon": {
+    "Media": {
+      "Provider": "Azure",
+      "EnableHashing": true,
+      "DefaultFolder": "uploads",
+      "BaseUrl": "http://127.0.0.1:10000/devstoreaccount1/media"
+    }
+  }
+}
 ```
 
-For Azure Blob Storage:
+`UseDevelopmentStorage=true` connects to Azurite. For an Azure Storage account,
+keep the connection string out of source control. For example, in an ASP.NET
+Core application:
+
+```bash
+dotnet user-secrets init
+dotnet user-secrets set "ConnectionStrings:AzureBlob" "<connection-string>"
+```
+
+Environment variables use ASP.NET Core's double-underscore convention:
+
+```env
+ConnectionStrings__AzureBlob=<connection-string>
+Media__Container=media
+Procyon__Media__Provider=Azure
+Procyon__Media__EnableHashing=true
+Procyon__Media__DefaultFolder=uploads
+Procyon__Media__BaseUrl=https://account.blob.core.windows.net/media
+```
+
+The provider creates the configured container when it is first resolved. SAS
+URL generation requires credentials capable of signing a SAS, such as a storage
+account connection string.
+
+### Register
 
 ```csharp
 using Procyon.Media;
@@ -62,135 +84,70 @@ builder.Services.AddProcyonMedia(builder.Configuration);
 builder.Services.AddAzureMediaProvider(builder.Configuration);
 ```
 
-Use `IMediaService` from application code.
+Register one `IMediaProvider` after the core services.
+
+### Upload
 
 ```csharp
-[ApiController]
-[Route("api/upload")]
-public class UploadController : ControllerBase
-{
-    private readonly IMediaService _mediaService;
+using Procyon.Media.Abstractions.Interfaces;
+using Procyon.Media.Abstractions.Models;
 
-    public UploadController(IMediaService mediaService)
+await using var stream = File.OpenRead("photo.png");
+
+var result = await mediaService.UploadAsync(
+    stream,
+    new MediaUploadOptions
     {
-        _mediaService = mediaService;
-    }
+        FileName = "photo.png",
+        ContentType = "image/png"
+    },
+    cancellationToken);
 
-    [HttpPost]
-    public async Task<IActionResult> Upload(IFormFile file, CancellationToken ct)
-    {
-        if (file.Length == 0)
-            return BadRequest("File is required");
-
-        await using var stream = file.OpenReadStream();
-
-        var result = await _mediaService.UploadAsync(
-            stream,
-            new MediaUploadOptions
-            {
-                FileName = file.FileName,
-                ContentType = file.ContentType
-            },
-            ct);
-
-        return Ok(result);
-    }
-}
+var storageKey = result.Key;
+var publicUrl = result.Url;
 ```
 
-## Configuration
+Treat `result.Key`, such as `uploads/0d5...png`, as the canonical storage
+identity. `result.Url` is a separately resolved public URL and may not be
+accessible if the container is private.
 
-Core configuration is read from `Procyon:Media`.
+When `GenerateUniqueName` is `true` (the default), the path generator replaces
+the original filename with a GUID while preserving its extension. It prepends
+`DefaultFolder` when configured. `Hash` is populated only when `EnableHashing`
+is enabled. `IsDuplicate` is currently always `false`; deduplication is left to
+the consuming application.
 
-```json
-{
-  "Procyon": {
-    "Media": {
-      "Provider": "S3",
-      "EnableHashing": true,
-      "DefaultFolder": "uploads",
-      "BaseUrl": "https://cdn.example.com",
-      "S3": {
-        "Bucket": "my-bucket"
-      }
-    }
-  }
-}
-```
-
-Environment variable equivalent:
-
-```env
-Procyon__Media__Provider=S3
-Procyon__Media__EnableHashing=true
-Procyon__Media__DefaultFolder=uploads
-Procyon__Media__BaseUrl=https://cdn.example.com
-Procyon__Media__S3__Bucket=my-bucket
-```
-
-`BaseUrl` is used by the default URL resolver. `DefaultFolder` is prepended to generated keys when set.
-
-## S3 Provider
-
-`AddS3Provider()` reads the bucket from `Procyon:Media:S3:Bucket` and uses the AWS SDK registration from `AWSSDK.Extensions.NETCore.Setup`.
-
-Common environment variables:
-
-```env
-AWS_ACCESS_KEY_ID=your-key
-AWS_SECRET_ACCESS_KEY=your-secret
-AWS_REGION=us-east-1
-Procyon__Media__S3__Bucket=my-bucket
-```
-
-## Azure Blob Provider
-
-`AddAzureMediaProvider()` reads the Azure Blob connection string from `ConnectionStrings:AzureBlob` and the container name from `Media:Container`.
-
-```json
-{
-  "ConnectionStrings": {
-    "AzureBlob": "UseDevelopmentStorage=true"
-  },
-  "Media": {
-    "Container": "uploads"
-  }
-}
-```
-
-The provider creates the container if it does not already exist.
-
-## Upload Options
+### Download or read
 
 ```csharp
-public class MediaUploadOptions
-{
-    public string? FileName { get; set; }
-    public string? ContentType { get; set; }
-    public bool GenerateUniqueName { get; set; } = true;
-}
+await using var stream = await mediaService.GetAsync(storageKey, cancellationToken);
+// Copy or return the stream to the caller.
 ```
 
-When `GenerateUniqueName` is true, the default path generator replaces the file name with a new GUID while keeping the extension.
-
-## Upload Result
+### Delete
 
 ```csharp
-public class MediaUploadResult
-{
-    public string Key { get; set; }
-    public string Url { get; set; }
-    public string FileName { get; set; }
-    public string? Hash { get; set; }
-    public long Size { get; set; }
-    public string ContentType { get; set; }
-    public bool IsDuplicate { get; set; }
-}
+await mediaService.DeleteAsync(storageKey, cancellationToken);
 ```
 
-`Hash` is populated only when `EnableHashing` is true. `IsDuplicate` is currently always false; deduplication can be handled by the consuming application using the returned hash.
+### URLs
 
-## Service API
+Generate a temporary read-only Azure SAS URL through `IMediaService`:
+
+```csharp
+var signedUrl = await mediaService.GetSignedUrlAsync(
+    storageKey,
+    TimeSpan.FromMinutes(15),
+    cancellationToken);
+```
+
+Resolve the configured public base URL through `IMediaUrlResolver`:
+
+```csharp
+var publicUrl = urlResolver.Resolve(storageKey);
+```
+
+## Public API
 
 ```csharp
 public interface IMediaService
@@ -201,7 +158,6 @@ public interface IMediaService
         CancellationToken ct = default);
 
     Task DeleteAsync(string key, CancellationToken ct = default);
-
     Task<Stream> GetAsync(string key, CancellationToken ct = default);
 
     Task<string> GetSignedUrlAsync(
@@ -211,54 +167,24 @@ public interface IMediaService
 }
 ```
 
-## Custom Providers
+Storage providers implement `IMediaProvider`; the provider-neutral core does
+not depend on an Azure or AWS SDK.
 
-Implement `IMediaProvider` to add another storage backend.
+## Azure example
 
-```csharp
-public interface IMediaProvider
-{
-    Task<string> UploadAsync(
-        Stream stream,
-        string path,
-        string contentType,
-        CancellationToken ct);
+The runnable example at
+[`examples/Procyon.Media.Example.Azure`](examples/Procyon.Media.Example.Azure)
+is a deliberately small ASP.NET Core API using only public package APIs. It
+provides:
 
-    Task DeleteAsync(string path, CancellationToken ct);
+- `POST /media`
+- `GET /media?key=...`
+- `DELETE /media?key=...`
+- `GET /media/url?key=...&expiresInMinutes=15`
+- `GET /media/public-url?key=...`
 
-    Task<Stream> GetAsync(string path, CancellationToken ct);
-
-    Task<string> GetSignedUrlAsync(
-        string path,
-        TimeSpan expiry,
-        CancellationToken ct);
-}
-```
-
-Then register the implementation as `IMediaProvider` after `AddProcyonMedia()`.
-
-## Example Project
-
-The runnable example is in `examples/Procyon.Example`.
+Run it against Azurite with:
 
 ```bash
-dotnet run --project Procyon.Media/examples/Procyon.Example/Procyon.Example.csproj
+dotnet run --project Procyon.Media/examples/Procyon.Media.Example.Azure/Procyon.Media.Example.Azure.csproj
 ```
-
-The example demonstrates:
-
-- S3-backed uploads
-- SQLite persistence for uploaded file metadata
-- `POST /api/upload`
-- `GET /api/upload`
-- `GET /api/upload/signed-url`
-- `DELETE /api/upload?key=...`
-
-## Roadmap
-
-- Provider package metadata alignment
-- Local disk provider
-- Upload validation helpers
-- Optional deduplication helpers
-- Background processing hooks
-- Media transformations

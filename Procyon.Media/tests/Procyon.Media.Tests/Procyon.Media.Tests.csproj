@@ -25,6 +25,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Procyon.Media\Procyon.Media.csproj" />
+    <ProjectReference Include="..\..\src\Procyon.Media.Azure\Procyon.Media.Azure.csproj" />
     <ProjectReference Include="..\..\src\Procyon.Media.S3\Procyon.Media.S3.csproj" />
   </ItemGroup>
 

@@ -13,14 +13,21 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <PackageId>Procyon.Media</PackageId>
-    <Version>0.1.0</Version>
+    <Version>1.0.1</Version>
     <Authors>Rudr Prasad</Authors>
     <Company>Procyon</Company>
-    <Description>Modular media upload abstraction with S3 support</Description>
-    <PackageTags>media;upload;s3;storage;dotnet</PackageTags>
+    <Description>Provider-neutral media upload, retrieval, deletion, URL resolution, and hashing services for .NET.</Description>
+    <PackageTags>media;upload;storage;dependency-injection;dotnet</PackageTags>
     <RepositoryUrl>https://github.com/rudrprasad05/nuget</RepositoryUrl>
-    <!-- Removed GeneratePackageOnBuild -->
+    <RepositoryType>git</RepositoryType>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);1591</NoWarn>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
+  <ItemGroup>
+    <None Include="..\..\README.md" Pack="true" PackagePath="\" Link="README.md" />
+  </ItemGroup>
 </Project>

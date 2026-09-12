@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>Procyon.Media.Example.Azure</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Procyon.Media\Procyon.Media.csproj" />
+    <ProjectReference Include="..\..\src\Procyon.Media.Azure\Procyon.Media.Azure.csproj" />
+  </ItemGroup>
+</Project>

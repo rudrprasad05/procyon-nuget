@@ -4,6 +4,24 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <PackageId>Procyon.Media.Abstractions</PackageId>
+    <Version>1.0.1</Version>
+    <Authors>Rudr Prasad</Authors>
+    <Company>Procyon</Company>
+    <Description>Public contracts and models for Procyon.Media storage providers.</Description>
+    <PackageTags>media;storage;abstractions;dotnet</PackageTags>
+    <RepositoryUrl>https://github.com/rudrprasad05/nuget</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);1591</NoWarn>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\README.md" Pack="true" PackagePath="\" Link="README.md" />
+  </ItemGroup>
 
 </Project>

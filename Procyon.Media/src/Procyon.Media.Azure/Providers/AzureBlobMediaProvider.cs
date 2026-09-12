@@ -5,7 +5,7 @@ using Procyon.Media.Abstractions.Interfaces;
 
 namespace Procyon.Media.Azure.Providers;
 
-public class AzureBlobMediaProvider : IMediaProvider
+public sealed class AzureBlobMediaProvider : IMediaProvider
 {
     private readonly BlobContainerClient _container;
 
@@ -38,7 +38,7 @@ public class AzureBlobMediaProvider : IMediaProvider
     public async Task<Stream> GetAsync(string path, CancellationToken ct)
     {
         var blob = _container.GetBlobClient(path);
-        var result = await blob.DownloadStreamingAsync();
+        var result = await blob.DownloadStreamingAsync(cancellationToken: ct);
         return result.Value.Content;
     }
 
