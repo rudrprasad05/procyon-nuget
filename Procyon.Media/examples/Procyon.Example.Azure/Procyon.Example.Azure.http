@@ -1,0 +1,5 @@
+@Procyon.Example.Azure_HostAddress = http://localhost:5220
+
+GET {{Procyon.Example.Azure_HostAddress}}/swagger/
+
+###

@@ -173,18 +173,21 @@ not depend on an Azure or AWS SDK.
 ## Azure example
 
 The runnable example at
-[`examples/Procyon.Media.Example.Azure`](examples/Procyon.Media.Example.Azure)
-is a deliberately small ASP.NET Core API using only public package APIs. It
-provides:
+[`examples/Procyon.Example.Azure`](examples/Procyon.Example.Azure)
+mirrors the S3 example's controller, SQLite, Swagger, and dotenv setup using
+only public package APIs. It provides:
 
-- `POST /media`
-- `GET /media?key=...`
-- `DELETE /media?key=...`
-- `GET /media/url?key=...&expiresInMinutes=15`
-- `GET /media/public-url?key=...`
+- `POST /api/upload`
+- `GET /api/upload` (saved metadata)
+- `DELETE /api/upload?key=...`
+- `GET /api/upload/signed-url?key=...&expiresInSeconds=900`
+- `GET /api/upload/file?key=...` (download)
+- `GET /api/upload/public-url?key=...`
 
 Run it against Azurite with:
 
 ```bash
-dotnet run --project Procyon.Media/examples/Procyon.Media.Example.Azure/Procyon.Media.Example.Azure.csproj
+cd Procyon.Media/examples/Procyon.Example.Azure
+cp .env.example .env
+dotnet run
 ```

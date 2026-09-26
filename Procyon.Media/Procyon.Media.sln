@@ -21,7 +21,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Procyon.Example", "examples
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Procyon.Media.Azure", "src\Procyon.Media.Azure\Procyon.Media.Azure.csproj", "{84B91739-9D25-4429-8D1A-9B73CC21F555}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Procyon.Media.Example.Azure", "examples\Procyon.Media.Example.Azure\Procyon.Media.Example.Azure.csproj", "{7481E4F9-3B89-4E9B-A11B-668624232E5F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Procyon.Example.Azure", "examples\Procyon.Example.Azure\Procyon.Example.Azure.csproj", "{7481E4F9-3B89-4E9B-A11B-668624232E5F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
